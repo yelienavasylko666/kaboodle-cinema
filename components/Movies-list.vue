@@ -5,11 +5,18 @@
         {{ title }}
       </h4>
       <div class="filter__item">
-        <button class="filter__button" v-bind:class="{'filter__button--active': selectedFilter === 'All'}" @click="selectAll()">All</button>
-        <button class="filter__button" v-bind:class="{'filter__button--active': selectedFilter === 'Movie'}" @click="selectMovies()">Movies</button>
-        <button class="filter__button" v-bind:class="{'filter__button--active': selectedFilter === 'TV-Show'}" @click="selectTvShows()">TV Shows</button>
+        <button class="filter__button" v-bind:class="{'filter__button--active': selectedFilter === 'All'}"
+                @click="selectAll()">All
+        </button>
+        <button class="filter__button" v-bind:class="{'filter__button--active': selectedFilter === 'Movie'}"
+                @click="selectMovies()">Movies
+        </button>
+        <button class="filter__button" v-bind:class="{'filter__button--active': selectedFilter === 'TV-Show'}"
+                @click="selectTvShows()">TV Shows
+        </button>
         <div class="filter__icons">
-          <svg class="filter__icon" v-bind:class="{'filter__icon--active': !listView }" @click="transformToCards()" version="1.1" id="Web_Site" xmlns="http://www.w3.org/2000/svg"
+          <svg class="filter__icon" v-bind:class="{'filter__icon--active': !listView }" @click="transformToCards()"
+               version="1.1" id="Web_Site" xmlns="http://www.w3.org/2000/svg"
                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                viewBox="69.1 318.8 473.7 213.8" enable-background="new 69.1 318.8 473.7 213.8" xml:space="preserve">
             <path d="M172.1,532.6h-103V318.8h103V532.6z"/>
@@ -17,7 +24,8 @@
             <path d="M419.3,532.6h-103V318.8h103V532.6z"/>
             <path d="M542.9,532.6h-103V318.8h103V532.6z"/>
           </svg>
-          <svg class="filter__icon" v-bind:class="{'filter__icon--active': listView }" @click="transformToList()" version="1.1" id="Web_Site" xmlns="http://www.w3.org/2000/svg"
+          <svg class="filter__icon" v-bind:class="{'filter__icon--active': listView }" @click="transformToList()"
+               version="1.1" id="Web_Site" xmlns="http://www.w3.org/2000/svg"
                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                viewBox="69.1 318.7 473.7 214" enable-background="new 69.1 318.7 473.7 214" xml:space="preserve">
             <rect x="69.1" y="501.9" width="35.7" height="30.7"/>
@@ -32,8 +40,15 @@
         </div>
       </div>
     </div>
+    <div class="video-player" v-if="showPlayer">
+      <iframe width="100%" height="500" src="https://www.youtube.com/embed/cYROqsUAw0o" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <img src="../assets/svg/close-youTube-player.svg" @click="closeVideo()" class="video-player-close">
+    </div>
     <div class="wrapper-items" v-bind:class="{'wrapper-items--list': listView}">
-      <div class="items" v-bind:style="{'margin-top': listView ? sliderPos + 'px' : 0, 'margin-left': !listView ? sliderPos + 'px' : 0}" @mousedown.prevent="onMouseDown($event)">
+      <div class="items"
+           v-bind:style="{'margin-top': listView ? sliderPos + 'px' : 0, 'margin-left': !listView ? sliderPos + 'px' : 0}"
+           @mousedown.prevent="onMouseDown($event)">
         <div class="item" v-for="(movie, index) of filteredData">
           <h5 class="item__heading-card">{{ movie.title }}</h5>
           <span class="item__year-card">{{ movie.year }}</span>
@@ -43,12 +58,14 @@
               alt="film-image" class="poster__logo">
             <img src="../assets/svg/movie-type.svg" class="poster__logo-left" alt="poster-icon">
             <img src="../assets/svg/products/actions/gradeless-white.svg" class="poster__logo-right" alt="poster-icon">
-            <div class="poster__logo-center"><img src="../assets/svg/play-button.svg" alt="poster-icon"></div>
+            <div class="poster__logo-center" @click="showVideo()"><img src="../assets/svg/play-button.svg"
+                                                                       alt="poster-icon"></div>
           </div>
           <div class="rating">
             <svg width="75" height="75" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#d3f4e3" stroke-width="20" />
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#22ca71" stroke-width="20" stroke-dasharray="314.16" :stroke-dashoffset="314.16 * (1 - (movie.rank || movie.expectations_count) / 10)" />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#d3f4e3" stroke-width="20"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#22ca71" stroke-width="20" stroke-dasharray="314.16"
+                      :stroke-dashoffset="314.16 * (1 - (movie.rank || movie.expectations_count) / 10)"/>
             </svg>
             <span class="rating__label">{{ movie.rank || movie.expectations_count }}</span>
 
@@ -71,7 +88,8 @@
                   <img src="../assets/svg/products/actions/comment.svg" class="item__info-icon" alt="item-logo">
                 </div>
                 <div class="item__info-item">
-                  <span class="item__info-num">{{ movie.expectations_count || movie.rank }}<span class="item__info-line">|</span></span>
+                  <span class="item__info-num">{{ movie.expectations_count || movie.rank }}<span
+                    class="item__info-line">|</span></span>
                   <img src="../assets/svg/products/actions/gradeless.svg" class="item__info-icon" alt="item-logo">
                 </div>
                 <div class="item__info-item">
@@ -112,12 +130,13 @@
                 down: false,
                 dragStartPoint: Number,
                 sliderPos: 0,
-                cardItemWidth: 295
+                cardItemWidth: 295,
+                showPlayer: false
             }
         },
         created() {
             this.selectAll();
-            if(process.client) {
+            if (process.client) {
                 window.addEventListener('mouseup', () => this.onMouseUp());
                 window.addEventListener('mousemove', (event) => this.drag(event));
             }
@@ -180,6 +199,12 @@
             },
             onMouseUp() {
                 this.down = false
+            },
+            showVideo() {
+                this.showPlayer = true
+            },
+            closeVideo() {
+                this.showPlayer = false
             }
 
         }
@@ -191,6 +216,24 @@
   .rating {
     display: none;
   }
+
+  .video-player {
+    position: relative;
+    .video-player-close {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      cursor: pointer;
+      transition: ease-out 0.3s;
+    }
+
+    .video-player-close:hover {
+      transform: scale(1.4) translateX(-50%);
+    }
+  }
+
   .filter {
     background-color: black;
     height: 63px;
@@ -379,10 +422,15 @@
         border-radius: 50%;
         background-color: rgba(8, 25, 37, 0.73);
         transform: translate(-50%, -50%);
+        cursor: pointer;
+        transition: ease-out 0.3s;
 
         img {
           width: 23px;
         }
+      }
+      &-center:hover {
+        background-color: rgba(34, 108, 160, 0.81);
       }
 
     }
@@ -412,6 +460,7 @@
         padding: 5px;
         cursor: pointer;
         outline: none;
+        background: none;
 
         &:last-child {
           transform: rotate(180deg);
